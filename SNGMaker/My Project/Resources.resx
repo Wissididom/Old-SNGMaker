@@ -118,14 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Paragraph" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Paragraph.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ColoredText" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ColoredText.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="halign_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\halign_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Zeilenumbruch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Zeilenumbruch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="redo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\redo_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Fett" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Fett.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="valign" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\valign.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Subscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Subscript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -133,46 +139,28 @@
   <data name="Superscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Superscript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Unterstrichen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Unterstrichen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="undo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\undo_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="valign" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\valign.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bold" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bold.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="halign_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\halign_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Durchgestrichen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Durchgestrichen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Fett" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Fett.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Italics" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Italics.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Kursiv" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Kursiv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="StrikeOut" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\StrikeOut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Underline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Underline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Unterstrichen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Unterstrichen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Paragraph" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Paragraph.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Zeilenumbruch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Zeilenumbruch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="redo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\redo_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ZwischenZeilen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ZwischenZeilen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FastColoredTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FastColoredTextBox.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Kursiv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Kursiv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ZwischenZeilen1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ZwischenZeilen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

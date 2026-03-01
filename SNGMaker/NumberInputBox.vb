@@ -1,4 +1,6 @@
-﻿Public Class NumberInputBox
+﻿Imports System.Windows.Forms
+
+Public Class NumberInputBox
 
     Public Overloads Function ShowDialog(ByVal MinVal As Decimal, ByVal Increment As Decimal, ByVal MaxVal As Decimal) As DialogResult
         Me.NumericUpDown1.Minimum = MinVal

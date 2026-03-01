@@ -1,4 +1,7 @@
-﻿Public Class NumericCheckTextBox
+﻿Imports System.Windows.Forms
+Imports System.ComponentModel
+
+Public Class NumericCheckTextBox
     Inherits TextBox
 
     Public Sub New()
@@ -33,5 +36,6 @@
         Me.ReadOnly = False
     End Sub
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property IsNumeric As Boolean = Nothing
 End Class

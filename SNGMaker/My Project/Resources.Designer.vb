@@ -63,16 +63,6 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property Bold() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("Bold", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
         Friend ReadOnly Property ColoredText() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("ColoredText", resourceCulture)
@@ -87,16 +77,6 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("Durchgestrichen", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property FastColoredTextBox() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("FastColoredTextBox", resourceCulture)
-                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -116,16 +96,6 @@ Namespace My.Resources
         Friend ReadOnly Property halign_24() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("halign_24", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property Italics() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("Italics", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -163,16 +133,6 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property StrikeOut() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("StrikeOut", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
         Friend ReadOnly Property Subscript() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Subscript", resourceCulture)
@@ -186,16 +146,6 @@ Namespace My.Resources
         Friend ReadOnly Property Superscript() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Superscript", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property Underline() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("Underline", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -246,6 +196,16 @@ Namespace My.Resources
         Friend ReadOnly Property ZwischenZeilen() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("ZwischenZeilen", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property ZwischenZeilen1() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ZwischenZeilen1", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

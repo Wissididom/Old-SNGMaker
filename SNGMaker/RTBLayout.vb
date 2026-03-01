@@ -1,4 +1,7 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Drawing
+Imports System.Text.RegularExpressions
+Imports System.Windows.Forms
+
 Module RTBLayout
 
     Public Sub TextChangedSubs(ByVal rtb As RichTextBox)
@@ -97,13 +100,14 @@ Module RTBLayout
                 Dim tempSelectionStart As Integer = rtb.SelectionStart
                 Dim tempSelectionLength As Integer = rtb.SelectionLength
                 Dim tempSelectedText As String = rtb.SelectedText
-                If Dialog_Font.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                    If Not Dialog_Font.Values = "" Then
-                        If Dialog_Font.cb_font_size.Checked = True Then
-                            tempSize = CInt(Dialog_Font.Values.Substring(5, Dialog_Font.Values.IndexOf(";") - 5))
+                Dim fontDialog = New Dialog_Font()
+                If fontDialog.ShowDialog() = DialogResult.OK Then
+                    If Not fontDialog.Values = "" Then
+                        If fontDialog.cb_font_size.Checked = True Then
+                            tempSize = CInt(fontDialog.Values.Substring(5, fontDialog.Values.IndexOf(";") - 5))
                         End If
-                        If Dialog_Font.cb_font_height.Checked = True Then
-                            tempHeight = CInt(Dialog_Font.Values.Substring(Dialog_Font.Values.IndexOf(";") + 8))
+                        If fontDialog.cb_font_height.Checked = True Then
+                            tempHeight = CInt(fontDialog.Values.Substring(fontDialog.Values.IndexOf(";") + 8))
                         End If
                     End If
                 End If
@@ -178,9 +182,9 @@ Module RTBLayout
                 Dim newString As New System.Text.StringBuilder
                 For i As Integer = 0 To aboveLine.Length - 1
                     If i = aboveLine.Length - 1 Then
-                        newString.Append(aboveLine(i) & vbNewLine & underLine(i))
+                        newString.Append(aboveLine(i) & vbCrLf & underLine(i))
                     Else
-                        newString.Append(aboveLine(i) & vbNewLine & underLine(i) & vbNewLine)
+                        newString.Append(aboveLine(i) & vbCrLf & underLine(i) & vbCrLf)
                     End If
                 Next
                 rtb.Text = newString.ToString()
@@ -201,16 +205,16 @@ Module RTBLayout
                 Dim newString As New System.Text.StringBuilder
                 For i As Integer = 0 To aboveLine.Length - 1
                     If i = aboveLine.Length - 1 Then
-                        newString.Append(aboveLine(i) & vbNewLine & "---" & vbNewLine)
+                        newString.Append(aboveLine(i) & vbCrLf & "---" & vbCrLf)
                     Else
-                        newString.Append(aboveLine(i) & vbNewLine)
+                        newString.Append(aboveLine(i) & vbCrLf)
                     End If
                 Next
                 For i As Integer = 0 To underLine.Length - 1
                     If i = underLine.Length - 1 Then
                         newString.Append(underLine(i))
                     Else
-                        newString.Append(underLine(i) & vbNewLine)
+                        newString.Append(underLine(i) & vbCrLf)
                     End If
                 Next
                 rtb.Text = newString.ToString()

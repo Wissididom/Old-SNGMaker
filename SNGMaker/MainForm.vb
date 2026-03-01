@@ -1,44 +1,49 @@
-﻿Public Class MainForm
+﻿Imports System.IO
+Imports System.Text
+Imports System.Windows.Forms
+Imports FastColoredTextBoxNS
+
+Public Class MainForm
 
     Public DescriptionFile As String = Application.StartupPath & "\sngDesc.xml"
 
     Private Sub tc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tc.SelectedIndexChanged
         If tc.SelectedIndex > 0 AndAlso tc.SelectedTab IsNot tp4 Then
-            UndoToolStripButton.Enabled = getActiveFastColoredTextBox().UndoEnabled
-            RedoToolStripButton.Enabled = getActiveFastColoredTextBox().RedoEnabled
+            UndoToolStripButton.Enabled = GetActiveFastColoredTextBox().UndoEnabled
+            RedoToolStripButton.Enabled = GetActiveFastColoredTextBox().RedoEnabled
             ts.Visible = True
         Else
             ts.Visible = False
         End If
         If tc.SelectedIndex = 2 Then
-            Dim ccli As Integer = -1
+            Dim ccli As UInteger = 0
             If PropertiesControl1.getByProperty("CCLI-Nummer").Value <> "" Then
                 If Not UInteger.TryParse(PropertiesControl1.getByProperty("CCLI-Nummer").Value, ccli) Then
-                    ccli = -1
+                    ccli = 0
                 End If
             End If
-            Dim churchsongid As Integer = -1
+            Dim churchsongid As UInteger = 0
             If PropertiesControl1.getByProperty("interne ID").Value <> "" Then
                 If Not UInteger.TryParse(PropertiesControl1.getByProperty("interne ID").Value, churchsongid) Then
-                    churchsongid = -1
+                    churchsongid = 0
                 End If
             End If
-            Dim langcount As Integer = -1
+            Dim langcount As UInteger = 0
             If PropertiesControl1.getByProperty("Übersetzungsanzahl").Value <> "" Then
                 If Not UInteger.TryParse(PropertiesControl1.getByProperty("Übersetzungsanzahl").Value, langcount) Then
-                    langcount = -1
+                    langcount = 0
                 End If
             End If
-            Dim tempo As Integer = -1
+            Dim tempo As UInteger = 0
             If PropertiesControl1.getByProperty("Tempo").Value <> "" Then
                 If Not UInteger.TryParse(PropertiesControl1.getByProperty("Tempo").Value, tempo) Then
-                    tempo = -1
+                    tempo = 0
                 End If
             End If
-            Dim fontsize As Integer = -1
+            Dim fontsize As UInteger = 0
             If PropertiesControl1.getByProperty("Schriftgröße").Value <> "" Then
                 If Not UInteger.TryParse(PropertiesControl1.getByProperty("Schriftgröße").Value, fontsize) Then
-                    fontsize = -1
+                    fontsize = 0
                 End If
             End If
             fctb_finished_sng_file.Text = gen.gen(PropertiesControl1.getByProperty("Titel").Value,
@@ -100,7 +105,7 @@
         End If
     End Sub
 
-    Public Function getActiveFastColoredTextBox() As FastColoredTextBoxNS.FastColoredTextBox
+    Public Function GetActiveFastColoredTextBox() As FastColoredTextBoxNS.FastColoredTextBox
         If tc.SelectedTab Is tp2 Then
             Return fctb_slides
         ElseIf tc.SelectedTab Is tp3 Then
@@ -111,84 +116,84 @@
     End Function
 
     Private Sub CutToolStripButton_Click(sender As Object, e As EventArgs) Handles CutToolStripButton.Click
-        getActiveFastColoredTextBox().Cut()
+        GetActiveFastColoredTextBox().Cut()
     End Sub
 
     Private Sub CopyToolStripButton_Click(sender As Object, e As EventArgs) Handles CopyToolStripButton.Click
-        getActiveFastColoredTextBox.Copy()
+        GetActiveFastColoredTextBox.Copy()
     End Sub
 
     Private Sub PasteToolStripButton_Click(sender As Object, e As EventArgs) Handles PasteToolStripButton.Click
-        getActiveFastColoredTextBox.Paste()
+        GetActiveFastColoredTextBox.Paste()
     End Sub
 
     Private Sub UndoToolStripButton_Click(sender As Object, e As EventArgs) Handles UndoToolStripButton.Click
-        UndoToolStripButton.Enabled = getActiveFastColoredTextBox.UndoEnabled
-        If getActiveFastColoredTextBox.UndoEnabled Then
-            getActiveFastColoredTextBox.Undo()
+        UndoToolStripButton.Enabled = GetActiveFastColoredTextBox.UndoEnabled
+        If GetActiveFastColoredTextBox.UndoEnabled Then
+            GetActiveFastColoredTextBox.Undo()
         End If
     End Sub
 
     Private Sub RedoToolStripButton_Click(sender As Object, e As EventArgs) Handles RedoToolStripButton.Click
-        RedoToolStripButton.Enabled = getActiveFastColoredTextBox.RedoEnabled
-        If getActiveFastColoredTextBox.RedoEnabled Then
-            getActiveFastColoredTextBox.Redo()
+        RedoToolStripButton.Enabled = GetActiveFastColoredTextBox.RedoEnabled
+        If GetActiveFastColoredTextBox.RedoEnabled Then
+            GetActiveFastColoredTextBox.Redo()
         End If
     End Sub
 
     Private Sub BoldToolStripButton_Click(sender As Object, e As EventArgs) Handles BoldToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<b>" & getActiveFastColoredTextBox().SelectedText & "</b>"
+        GetActiveFastColoredTextBox().SelectedText = "<b>" & GetActiveFastColoredTextBox().SelectedText & "</b>"
     End Sub
 
     Private Sub ItalicsToolStripButton_Click(sender As Object, e As EventArgs) Handles ItalicsToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<i>" & getActiveFastColoredTextBox().SelectedText & "</i>"
+        GetActiveFastColoredTextBox().SelectedText = "<i>" & GetActiveFastColoredTextBox().SelectedText & "</i>"
     End Sub
 
     Private Sub UnderlineToolStripButton_Click(sender As Object, e As EventArgs) Handles UnderlineToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<u>" & getActiveFastColoredTextBox().SelectedText & "</u>"
+        GetActiveFastColoredTextBox().SelectedText = "<u>" & GetActiveFastColoredTextBox().SelectedText & "</u>"
     End Sub
 
     Private Sub StrikeOutToolStripButton_Click(sender As Object, e As EventArgs) Handles StrikeOutToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<strike>" & getActiveFastColoredTextBox().SelectedText & "</strike>"
+        GetActiveFastColoredTextBox().SelectedText = "<strike>" & GetActiveFastColoredTextBox().SelectedText & "</strike>"
     End Sub
 
     Private Sub AlignToolStripButton_Click(sender As Object, e As EventArgs) Handles AlignToolStripButton.Click
         Dim aib As New AlignInputBox()
         If aib.ShowDialog() = DialogResult.OK Then
-            getActiveFastColoredTextBox().InsertLinePrefix("<align:" & aib.Value & ">")
+            GetActiveFastColoredTextBox().InsertLinePrefix("<align:" & aib.Value & ">")
         End If
     End Sub
 
     Private Sub VAlignToolStripButton_Click(sender As Object, e As EventArgs) Handles VAlignToolStripButton.Click
         Dim vaib As New VAlignInputBox()
         If vaib.ShowDialog() = DialogResult.OK Then
-            getActiveFastColoredTextBox().InsertLinePrefix("<valign:" & vaib.Value & ">")
+            GetActiveFastColoredTextBox().InsertLinePrefix("<valign:" & vaib.Value & ">")
         End If
     End Sub
 
     Private Sub ColoredTextToolStripButton_Click(sender As Object, e As EventArgs) Handles ColoredTextToolStripButton.Click
         Dim cd As New ColorDialog
         If cd.ShowDialog() = DialogResult.OK Then
-            getActiveFastColoredTextBox().SelectedText = "<c:$" & cd.Color.ToArgb().ToString("x").Substring(2) & ">" & getActiveFastColoredTextBox().SelectedText & "</c>"
+            GetActiveFastColoredTextBox().SelectedText = "<c:$" & cd.Color.ToArgb().ToString("x").Substring(2) & ">" & GetActiveFastColoredTextBox().SelectedText & "</c>"
         End If
     End Sub
 
     Private Sub WordWrapToolStripButton_Click(sender As Object, e As EventArgs) Handles WordWrapToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<wordwrap>" & getActiveFastColoredTextBox().SelectedText & "</wordwrap>"
+        GetActiveFastColoredTextBox().SelectedText = "<wordwrap>" & GetActiveFastColoredTextBox().SelectedText & "</wordwrap>"
     End Sub
 
     Private Sub SubscriptToolStripButton_Click(sender As Object, e As EventArgs) Handles SubscriptToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<sub>" & getActiveFastColoredTextBox().SelectedText & "</sub>"
+        GetActiveFastColoredTextBox().SelectedText = "<sub>" & GetActiveFastColoredTextBox().SelectedText & "</sub>"
     End Sub
 
     Private Sub SuperscriptToolStripButton_Click(sender As Object, e As EventArgs) Handles SuperscriptToolStripButton.Click
-        getActiveFastColoredTextBox().SelectedText = "<super>" & getActiveFastColoredTextBox().SelectedText & "</super>"
+        GetActiveFastColoredTextBox().SelectedText = "<super>" & GetActiveFastColoredTextBox().SelectedText & "</super>"
     End Sub
 
     Private Sub LinespacingToolStripButton_Click(sender As Object, e As EventArgs) Handles LinespacingToolStripButton.Click
         Dim nib As New NumberInputBox
         If nib.ShowDialog(0, 0.1, 100) = DialogResult.OK Then
-            getActiveFastColoredTextBox().InsertLinePrefix("<linespacing:" & Strings.FormatNumber(nib.Value, 1, TriState.False, TriState.False, TriState.False).Replace(",", ".") & ">")
+            GetActiveFastColoredTextBox().InsertLinePrefix("<linespacing:" & Strings.FormatNumber(nib.Value, 1, TriState.False, TriState.False, TriState.False).Replace(",", ".") & ">")
         End If
     End Sub
 
@@ -197,15 +202,15 @@
         If df.ShowDialog() = DialogResult.OK Then
             Dim size As String = df.Values.Split(";"c)(0).Split(":"c)(1)
             Dim height As String = df.Values.Split(";"c)(1).Split(":"c)(1)
-            Dim tempString As String = getActiveFastColoredTextBox().SelectedText
+            Dim tempString As String = GetActiveFastColoredTextBox().SelectedText
             If df.hasSize Then tempString = "<s:" & size & ">" & tempString & "</s>"
             If df.hasHeight Then tempString = "<h:" & height & ">" & tempString & "</h>"
-            getActiveFastColoredTextBox().SelectedText = tempString
+            GetActiveFastColoredTextBox().SelectedText = tempString
         End If
     End Sub
 
     Private Sub ZeilenZwischenDieOberenZeilenToolStripButton_Click(sender As Object, e As EventArgs) Handles ZeilenZwischenDieOberenZeilenToolStripButton.Click
-        Dim separated() As String = getActiveFastColoredTextBox.Text.Split({"---"}, StringSplitOptions.None)
+        Dim separated() As String = GetActiveFastColoredTextBox.Text.Split({"---"}, StringSplitOptions.None)
         Dim aboveLine() As String = separated(0).TrimEnd.Split({vbCrLf}, StringSplitOptions.None)
         Dim underLine() As String = separated(1).TrimStart.Split({vbCrLf}, StringSplitOptions.None)
         Dim useAbove As Boolean = True
@@ -231,20 +236,20 @@
                 newString.Append(aboveLine(i) & vbCrLf & underLine(i) & vbCrLf)
             End If
         Next
-        getActiveFastColoredTextBox.Text = newString.ToString()
-        getActiveFastColoredTextBox.Text = getActiveFastColoredTextBox.Text.Replace(vbCrLf & vbCrLf, vbCrLf & "---")
+        GetActiveFastColoredTextBox.Text = newString.ToString()
+        GetActiveFastColoredTextBox.Text = GetActiveFastColoredTextBox.Text.Replace(vbCrLf & vbCrLf, vbCrLf & "---")
     End Sub
 
     Private Sub NewLineToolStripButton_Click(sender As Object, e As EventArgs) Handles NewLineToolStripButton.Click
-        getActiveFastColoredTextBox().InsertText("<br>")
+        GetActiveFastColoredTextBox().InsertText("<br>")
     End Sub
 
     Private Sub NewParagraphToolStripButton_Click(sender As Object, e As EventArgs) Handles NewParagraphToolStripButton.Click
-        getActiveFastColoredTextBox().InsertText("<p>")
+        GetActiveFastColoredTextBox().InsertText("<p>")
     End Sub
 
     Private Sub SprachenAufZweiFolienAufteilenToolStripButton_Click(sender As Object, e As EventArgs) Handles SprachenAufZweiFolienAufteilenToolStripButton.Click
-        Dim separated() As String = getActiveFastColoredTextBox.Text.Split({vbCrLf}, StringSplitOptions.None)
+        Dim separated() As String = GetActiveFastColoredTextBox.Text.Split({vbCrLf}, StringSplitOptions.None)
         Dim aboveList As New List(Of String)
         Dim underList As New List(Of String)
         For i As Integer = 0 To separated.Length - 1
@@ -271,14 +276,15 @@
                 newString.Append(underLine(i) & vbCrLf)
             End If
         Next
-        getActiveFastColoredTextBox.Text = newString.ToString()
+        GetActiveFastColoredTextBox.Text = newString.ToString()
     End Sub
 
     Private Sub TextChangedDelayed(sender As Object, e As FastColoredTextBoxNS.TextChangedEventArgs) Handles fctb_slides.TextChangedDelayed, fctb_finished_sng_file.TextChangedDelayed
         On Error GoTo OnError
+        Dim senderFctb = CType(sender, FastColoredTextBox)
         If IO.File.Exists(DescriptionFile) Then
-            sender.DescriptionFile = DescriptionFile
-            sender.SyntaxHighlighter.HighlightSyntax(FastColoredTextBoxNS.Language.Custom, sender.Range)
+            senderFctb.DescriptionFile = DescriptionFile
+            senderFctb.SyntaxHighlighter.HighlightSyntax(FastColoredTextBoxNS.Language.Custom, sender.Range)
         End If
         If fctb_slides.Text = "" Then
             If tc.TabPages.Contains(tp3) Then
@@ -317,12 +323,12 @@ OnError:
             "Hintergrundbild", "Schrift", "Schrift - Sprache-N", "Schriftgröße", "Textausrichtung", "Titelausrichtung"}
         Dim tindex As Integer = properties.Length - 1
         For Each [property] As String In properties.Reverse
-            PropertiesControl1.InsertItem(getPropertiesControlEntry([property], tindex))
+            PropertiesControl1.InsertItem(GetPropertiesControlEntry([property], tindex))
             tindex -= 1
         Next
     End Sub
 
-    Private Function getPropertiesControlEntry(ByVal [property] As String, ByVal tindex As Integer) As PropertiesControlEntry
+    Private Function GetPropertiesControlEntry(ByVal [property] As String, ByVal tindex As Integer) As PropertiesControlEntry
         If [property] = "CCLI-Nummer" Or [property] = "interne ID" Or [property] = "Übersetzungsanzahl" Or [property] = "Tempo" Or [property] = "Schriftgröße" Then
             Return New PropertiesControlEntry([property], True) With {.TabIndex = tindex}
         Else
@@ -360,7 +366,7 @@ OnError:
             .Filter = "SNG-Dateien|*.sng|Textdokumente|*.txt|Alle Dateien|*.*"
             If .ShowDialog() = DialogResult.OK Then
                 'fctb_finished_sng_file.SaveToFile(.FileName, System.Text.Encoding.Default)
-                My.Computer.FileSystem.WriteAllText(.FileName, fctb_finished_sng_file.Text, False)
+                File.WriteAllText(.FileName, fctb_finished_sng_file.Text, Encoding.UTF8)
             End If
         End With
     End Sub

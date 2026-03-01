@@ -1,7 +1,13 @@
-﻿Public Class PropertiesControlEntry
+﻿Imports System.ComponentModel
+Imports System.Drawing
+Imports System.Windows.Forms
+
+Public Class PropertiesControlEntry
     Inherits UserControl
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Friend WithEvents Label1 As Label
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Friend WithEvents TextBox1 As NumericCheckTextBox
 
     Private Sub InitializeComponent()
@@ -40,39 +46,48 @@
 
     End Sub
 
-    Public Sub New(ByVal [Property] As String)
+    Public Sub New()
         InitializeComponent()
-        Label1.Text = [Property] & ":"
     End Sub
 
-    Public Sub New(ByVal [Property] As String, ByVal Value As String)
+    Public Sub New(ByVal [property] As String)
         InitializeComponent()
-        Label1.Text = [Property] & ":"
+        Label1.Text = [property] & ":"
+    End Sub
+
+    Public Sub New(ByVal [property] As String, ByVal Value As String)
+        InitializeComponent()
+        Label1.Text = [property] & ":"
         TextBox1.Text = Value
     End Sub
 
-    Public Sub New(ByVal [Property] As String, ByVal numeric As Boolean)
+    Public Sub New(ByVal [property] As String, ByVal numeric As Boolean)
         InitializeComponent()
-        Label1.Text = [Property] & ":"
+        Label1.Text = [property] & ":"
         TextBox1.IsNumeric = numeric
     End Sub
 
-    Public Sub New(ByVal [Property] As String, ByVal Value As String, ByVal numeric As Boolean)
+    Public Sub New(ByVal [property] As String, ByVal Value As String, ByVal numeric As Boolean)
         InitializeComponent()
-        Label1.Text = [Property] & ":"
+        Label1.Text = [property] & ":"
         TextBox1.Text = Value
         TextBox1.IsNumeric = numeric
     End Sub
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property [Property] As String
         Get
-            Return Label1.Text.Split(":"c)(Label1.Text.Split(":"c).Count - 2)
+            If Label1.Text.Contains(":"c) Then
+                Return Label1.Text.Split(":"c)(Label1.Text.Split(":"c).Count - 2)
+            End If
+            Return Label1.Text
         End Get
         Set
             Label1.Text = Value & ":"
         End Set
     End Property
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property Value As String
         Get
             Return TextBox1.Text
@@ -82,6 +97,7 @@
         End Set
     End Property
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property IsNumeric As Boolean
         Get
             Return TextBox1.IsNumeric

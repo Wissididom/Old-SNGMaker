@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+	<style name="Unknown" backColor="#5DBCD2" fontStyle="Bold" />
+	<style name="Verse" backColor="#0080FF" fontStyle="Bold" />
+	<style name="Pre" backColor="#AA55FF" fontStyle="Bold" />
+	<style name="Bridge" backColor="#CC0000" fontStyle="Bold" />
+	<style name="Refrain" backColor="#8000FF" fontStyle="Bold" />
+	<style name="Coda" backColor="#008040" fontStyle="Bold" />
+	<style name="LightBlue" backColor="#AAB0FF" fontStyle="Bold" />
+	<style name="Yellow" backColor="#FFFF00" fontStyle="Bold" />
+	<style name="Hyphen" color="#CC0000" fontStyle="Bold" />
+	<rule style="Unknown">(?i)^(Unbekannt|Unbenannt|Unknown)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Verse">(?i)^(Vers|Verse|Strophe|Teil|Part)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Pre">(?i)^(Pre-Bridge|Pre-Refrain|Pre-Chorus|Pre-Coda)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Bridge">(?i)^(Bridge|Misc|Zwischenspiel|Interlude|Instrumental|Turnaround|Tag|Andere)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Refrain">(?i)^(Refrain|Chorus)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Coda">(?i)^(Coda|Ending|Ende|Outro|Breakdown|Vamp)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="LightBlue">(?i)^(Chor|Solo)( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Yellow">(?i)^Copyright( ([0-9]+[a-z]*|[A-Z]))?$</rule>
+	<rule style="Hyphen">^---?-?$</rule>
+</doc>

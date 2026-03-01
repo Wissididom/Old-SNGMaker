@@ -166,14 +166,14 @@
         Return Parse(File, System.Text.Encoding.Default, content)
     End Function
 
-    Public Shared Function Parse(ByVal File As String, ByVal encoding As System.Text.Encoding, ByVal Optional content As Boolean = False) As Dictionary(Of String, String)
+    Public Shared Function Parse(ByVal file As String, ByVal encoding As System.Text.Encoding, ByVal Optional content As Boolean = False) As Dictionary(Of String, String)
         If Not content Then
-            File = My.Computer.FileSystem.ReadAllText(File, encoding)
+            file = System.IO.File.ReadAllText(file, encoding)
         End If
-        File = File.Replace(vbCrLf, vbLf).Replace(vbCr, vbLf)
+        file = file.Replace(vbCrLf, vbLf).Replace(vbCr, vbLf)
         Dim dic As New Dictionary(Of String, String)
         Dim slides As String = ""
-        For Each line As String In File.Split(vbLf.ToCharArray())
+        For Each line As String In file.Split(vbLf.ToCharArray())
             If line.StartsWith("#") Then
                 If line.ToLower().StartsWith("#Title=".ToLower()) Then
                     dic.Add("title", line.Substring(Len("#Title=")))

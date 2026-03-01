@@ -1,5 +1,7 @@
 ﻿Imports System.ComponentModel
-Imports Microsoft.VisualBasic.CompilerServices
+Imports System.Drawing
+Imports System.Windows.Forms
+
 Public Class PropertiesControl
     Inherits UserControl
 
@@ -57,11 +59,11 @@ Public Class PropertiesControl
         End While
     End Sub
 
-    Public Function getByProperty(ByVal [Property] As String) As PropertiesControlEntry
+    Public Function getByProperty(ByVal [property] As String) As PropertiesControlEntry
         Dim items As List(Of PropertiesControlEntry) = Me.Items
         Dim enumerator As List(Of PropertiesControlEntry).Enumerator = Me.Items.GetEnumerator
         While enumerator.MoveNext
-            If enumerator.Current.Property = [Property] Then
+            If enumerator.Current.Property = [property] Then
                 Return enumerator.Current
             End If
         End While
