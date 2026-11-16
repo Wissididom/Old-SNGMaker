@@ -21,7 +21,7 @@ namespace FastColoredTextBoxNS
         public bool UseOriginalFont { get; set; }
 
         FastColoredTextBox tb;
-        readonly Dictionary<Color, int> colorTable = [];
+        Dictionary<Color, int> colorTable = new Dictionary<Color, int>();
 
         public ExportToRTF()
         {
@@ -31,7 +31,7 @@ namespace FastColoredTextBoxNS
         public string GetRtf(FastColoredTextBox tb)
         {
             this.tb = tb;
-            var sel = new Range(tb);
+            Range sel = new Range(tb);
             sel.SelectAll();
             return GetRtf(sel);
         }
@@ -111,10 +111,8 @@ namespace FastColoredTextBoxNS
             //
             if (UseOriginalFont)
             {
-#pragma warning disable CA2241 // Provide correct arguments to formatting methods
                 sb.Insert(0, string.Format(@"{{\fonttbl{{\f0\fmodern {0};}}}}{{\fs{1} ",
                                 tb.Font.Name, (int)(2 * tb.Font.SizeInPoints), tb.CharHeight));
-#pragma warning restore CA2241 // Provide correct arguments to formatting methods
                 sb.AppendLine(@"}");
             }
 
@@ -128,7 +126,7 @@ namespace FastColoredTextBoxNS
 
         private RTFStyleDescriptor GetRtfDescriptor(StyleIndex styleIndex)
         {
-            List<Style> styles = [];
+            List<Style> styles = new List<Style>();
             //find text renderer
             TextStyle textStyle = null;
             int mask = 1;
@@ -149,10 +147,10 @@ namespace FastColoredTextBoxNS
                                 textStyle = style as TextStyle;
                             }
                     }
-                mask <<= 1;
+                mask = mask << 1;
             }
             //add TextStyle css
-            RTFStyleDescriptor result;
+            RTFStyleDescriptor result = null;
 
             if (!hasTextStyle)
             {
@@ -174,10 +172,10 @@ namespace FastColoredTextBoxNS
             return string.Format(@"\red{0}\green{1}\blue{2}", color.R, color.G, color.B);
         }
 
-        private void Flush(StringBuilder sb, StringBuilder tempSb, StyleIndex currentStyle)
+        private void Flush(StringBuilder sb, StringBuilder tempSB, StyleIndex currentStyle)
         {
             //find textRenderer
-            if (tempSb.Length == 0)
+            if (tempSB.Length == 0)
                 return;
 
             var desc = GetRtfDescriptor(currentStyle);
@@ -192,10 +190,10 @@ namespace FastColoredTextBoxNS
                 tags.Append(desc.AdditionalTags.Trim());
 
             if(tags.Length > 0)
-                sb.AppendFormat(@"{{{0} {1}}}", tags, tempSb.ToString());
+                sb.AppendFormat(@"{{{0} {1}}}", tags, tempSB.ToString());
             else
-                sb.Append(tempSb);
-            tempSb.Length = 0;
+                sb.Append(tempSB.ToString());
+            tempSB.Length = 0;
         }
 
         private int GetColorTableNumber(Color color)

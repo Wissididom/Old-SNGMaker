@@ -23,17 +23,16 @@ namespace FastColoredTextBoxNS
         private bool scrollbarVisible = true;
 
         [Description("Target FastColoredTextBox")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public FastColoredTextBox Target
         {
             get { return target; }
             set
             {
-                if (target is not null)
+                if (target != null)
                     UnSubscribe(target);
 
                 target = value;
-                if (value is not null)
+                if (value != null)
                 {
                     Subscribe(target);
                 }
@@ -46,7 +45,7 @@ namespace FastColoredTextBoxNS
         /// </summary>
         [Description("Scale")]
         [DefaultValue(0.3f)]
-        public new float Scale
+        public float Scale
         {
             get { return scale; }
             set
@@ -87,7 +86,9 @@ namespace FastColoredTextBoxNS
         protected virtual void OnTargetChanged()
         {
             NeedRepaint();
-            TargetChanged?.Invoke(this, EventArgs.Empty);
+
+            if (TargetChanged != null)
+                TargetChanged(this, EventArgs.Empty);
         }
 
         protected virtual void UnSubscribe(FastColoredTextBox target)
@@ -132,7 +133,7 @@ namespace FastColoredTextBoxNS
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (target is null)
+            if (target == null)
                 return;
 
             var zoom = this.Scale * 100 / target.Zoom;
@@ -187,10 +188,12 @@ namespace FastColoredTextBoxNS
                 e.Graphics.ResetTransform();
                 e.Graphics.SmoothingMode = SmoothingMode.None;
 
-                using var brush = new SolidBrush(Color.FromArgb(200, ForeColor));
-                var rect = new RectangleF(ClientSize.Width - 3, ClientSize.Height * sp1, 2,
-                                          ClientSize.Height * (sp2 - sp1));
-                e.Graphics.FillRectangle(brush, rect);
+                using (var brush = new SolidBrush(Color.FromArgb(200, ForeColor)))
+                {
+                    var rect = new RectangleF(ClientSize.Width - 3, ClientSize.Height*sp1, 2,
+                                              ClientSize.Height*(sp2 - sp1));
+                    e.Graphics.FillRectangle(brush, rect);
+                }
             }
 
             needRepaint = false;
@@ -198,14 +201,14 @@ namespace FastColoredTextBoxNS
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 Scroll(e.Location);
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 Scroll(e.Location);
             base.OnMouseMove(e);
         }

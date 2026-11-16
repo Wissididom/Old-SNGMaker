@@ -14,20 +14,17 @@ namespace FastColoredTextBoxNS
     [Browsable(false)]
     public class AutocompleteMenu : ToolStripDropDown, IDisposable
     {
-        readonly AutocompleteListView listView;
+        AutocompleteListView listView;
         public ToolStripControlHost host;
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Range Fragment { get; internal set; }
 
         /// <summary>
-        /// Regex pattern for search fragment around caret
+        /// Regex pattern for serach fragment around caret
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SearchPattern { get; set; }
         /// <summary>
         /// Minimum fragment length for popup
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int MinFragmentLength { get; set; }
         /// <summary>
         /// User selects item
@@ -44,22 +41,18 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Allow TAB for select menu item
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AllowTabKey { get { return listView.AllowTabKey; } set { listView.AllowTabKey = value; } }
         /// <summary>
         /// Interval of menu appear (ms)
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int AppearInterval { get { return listView.AppearInterval; } set { listView.AppearInterval = value; } }
         /// <summary>
         /// Sets the max tooltip window size
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Size MaxTooltipSize { get { return listView.MaxToolTipSize; } set { listView.MaxToolTipSize = value; } }
         /// <summary>
         /// Tooltip will perm show and duration will be ignored
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AlwaysShowTooltip { get { return listView.AlwaysShowTooltip; } set { listView.AlwaysShowTooltip = value; } }
 
         /// <summary>
@@ -91,21 +84,19 @@ namespace FastColoredTextBoxNS
             Padding = Padding.Empty;
             BackColor = Color.White;
             listView = new AutocompleteListView(tb);
-            host = new ToolStripControlHost(listView)
-            {
-                Margin = new Padding(2, 2, 2, 2),
-                Padding = Padding.Empty,
-                AutoSize = false,
-                AutoToolTip = false
-            };
+            host = new ToolStripControlHost(listView);
+            host.Margin = new Padding(2, 2, 2, 2);
+            host.Padding = Padding.Empty;
+            host.AutoSize = false;
+            host.AutoToolTip = false;
             CalcSize();
             base.Items.Add(host);
             listView.Parent = this;
             SearchPattern = @"[\w\.]";
             MinFragmentLength = 2;
+
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new Font Font
         {
             get { return listView.Font; }
@@ -114,7 +105,8 @@ namespace FastColoredTextBoxNS
 
         new internal void OnOpening(CancelEventArgs args)
         {
-            Opening?.Invoke(this, args);
+            if (Opening != null)
+                Opening(this, args);
         }
 
         public new void Close()
@@ -126,7 +118,7 @@ namespace FastColoredTextBoxNS
         internal void CalcSize()
         {
             host.Size = listView.Size;
-            Size = new Size(listView.Size.Width + 4, listView.Size.Height + 4);
+            Size = new System.Drawing.Size(listView.Size.Width + 4, listView.Size.Height + 4);
         }
 
         public virtual void OnSelecting()
@@ -141,12 +133,14 @@ namespace FastColoredTextBoxNS
 
         internal void OnSelecting(SelectingEventArgs args)
         {
-            Selecting?.Invoke(this, args);
+            if (Selecting != null)
+                Selecting(this, args);
         }
 
         public void OnSelected(SelectedEventArgs args)
         {
-            Selected?.Invoke(this, args);
+            if (Selected != null)
+                Selected(this, args);
         }
 
         public new AutocompleteListView Items
@@ -166,7 +160,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Minimal size of menu
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new Size MinimumSize
         {
             get { return Items.MinimumSize; }
@@ -176,7 +169,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Image list of menu
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new ImageList ImageList
         {
             get { return Items.ImageList; }
@@ -186,7 +178,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Tooltip duration (ms)
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ToolTipDuration
         {
             get { return Items.ToolTipDuration; }
@@ -196,7 +187,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Tooltip
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ToolTip ToolTip
         {
             get { return Items.toolTip; }
@@ -211,15 +201,15 @@ namespace FastColoredTextBoxNS
         }
     }
 
-    [ToolboxItem(false)]
+    [System.ComponentModel.ToolboxItem(false)]
     public class AutocompleteListView : UserControl, IDisposable
     {
         public event EventHandler FocussedItemIndexChanged;
 
         internal List<AutocompleteItem> visibleItems;
-        IEnumerable<AutocompleteItem> sourceItems = [];
+        IEnumerable<AutocompleteItem> sourceItems = new List<AutocompleteItem>();
         int focussedItemIndex = 0;
-        readonly int hoveredItemIndex = -1;
+        int hoveredItemIndex = -1;
 
         private int ItemHeight
         {
@@ -228,32 +218,23 @@ namespace FastColoredTextBoxNS
 
         AutocompleteMenu Menu { get { return Parent as AutocompleteMenu; } }
         int oldItemCount = 0;
-        readonly FastColoredTextBox tb;
-        internal ToolTip toolTip = new();
-        readonly System.Windows.Forms.Timer timer = new();
+        FastColoredTextBox tb;
+        internal ToolTip toolTip = new ToolTip();
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool AllowTabKey { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ImageList ImageList { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int AppearInterval { get { return timer.Interval; } set { timer.Interval = value; } }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal int ToolTipDuration { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal Size MaxToolTipSize { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal bool AlwaysShowTooltip
         {
             get { return toolTip.ShowAlways; }
             set { toolTip.ShowAlways = value; }
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SelectedColor { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color HoveredColor { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int FocussedItemIndex
         {
             get { return focussedItemIndex; }
@@ -262,12 +243,12 @@ namespace FastColoredTextBoxNS
                 if (focussedItemIndex != value)
                 {
                     focussedItemIndex = value;
-                    FocussedItemIndexChanged?.Invoke(this, EventArgs.Empty);
+                    if (FocussedItemIndexChanged != null)
+                        FocussedItemIndexChanged(this, EventArgs.Empty);
                 }
             }
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public AutocompleteItem FocussedItem
         {
             get
@@ -286,7 +267,7 @@ namespace FastColoredTextBoxNS
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
             base.Font = new Font(FontFamily.GenericSansSerif, 9);
-            visibleItems = [];
+            visibleItems = new List<AutocompleteItem>();
             VerticalScroll.SmallChange = ItemHeight;
             MaximumSize = new Size(Size.Width, 180);
             toolTip.ShowAlways = false;
@@ -360,7 +341,7 @@ namespace FastColoredTextBoxNS
 
         void SafetyClose()
         {
-            if (Menu is not null && !Menu.IsDisposed)
+            if (Menu != null && !Menu.IsDisposed)
                 Menu.Close();
         }
 
@@ -384,7 +365,7 @@ namespace FastColoredTextBoxNS
             DoAutocomplete(false);
         }
 
-        static void ResetTimer(System.Windows.Forms.Timer timer)
+        void ResetTimer(System.Windows.Forms.Timer timer)
         {
             timer.Stop();
             timer.Start();
@@ -448,7 +429,7 @@ namespace FastColoredTextBoxNS
             {
                 if (!Menu.Visible)
                 {
-                    var args = new CancelEventArgs();
+                    CancelEventArgs args = new CancelEventArgs();
                     Menu.OnOpening(args);
                     if(!args.Cancel)
                         Menu.Show(tb, point);
@@ -506,7 +487,7 @@ namespace FastColoredTextBoxNS
 
             if (!Menu.Visible)
             {
-                if (tb.HotkeysMapping.TryGetValue(e.KeyData, out FCTBAction value) && value == FCTBAction.AutocompleteMenu)
+                if (tb.HotkeysMapping.ContainsKey(e.KeyData) && tb.HotkeysMapping[e.KeyData] == FCTBAction.AutocompleteMenu)
                 {
                     DoAutocomplete();
                     e.Handled = true;
@@ -541,7 +522,7 @@ namespace FastColoredTextBoxNS
             int finishI = (VerticalScroll.Value + ClientSize.Height) / itemHeight + 1;
             startI = Math.Max(startI, 0);
             finishI = Math.Min(finishI, visibleItems.Count);
-            int y/* = 0*/;
+            int y = 0;
             int leftPadding = 18;
             for (int i = startI; i < finishI; i++)
             {
@@ -553,7 +534,7 @@ namespace FastColoredTextBoxNS
                 using (var brush = new SolidBrush(item.BackColor))
                     e.Graphics.FillRectangle(brush, 1, y, ClientSize.Width - 1 - 1, itemHeight - 1);
 
-                if (ImageList is not null && visibleItems[i].ImageIndex >= 0)
+                if (ImageList != null && visibleItems[i].ImageIndex >= 0)
                     e.Graphics.DrawImage(ImageList.Images[item.ImageIndex], 1, y);
 
                 if (i == FocussedItemIndex)
@@ -583,7 +564,7 @@ namespace FastColoredTextBoxNS
         {
             base.OnMouseClick(e);
 
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 FocussedItemIndex = PointToItemIndex(e.Location);
                 DoSelectedVisible();
@@ -606,8 +587,8 @@ namespace FastColoredTextBoxNS
             tb.TextSource.Manager.BeginAutoUndoCommands();
             try
             {
-                var item = FocussedItem;
-                var args = new SelectingEventArgs()
+                AutocompleteItem item = FocussedItem;
+                SelectingEventArgs args = new SelectingEventArgs()
                 {
                     Item = item,
                     SelectedIndex = FocussedItemIndex
@@ -630,7 +611,7 @@ namespace FastColoredTextBoxNS
 
                 Menu.Close();
                 //
-                var args2 = new SelectedEventArgs()
+                SelectedEventArgs args2 = new SelectedEventArgs()
                 {
                     Item = item,
                     Tb = Menu.Fragment.tb
@@ -783,7 +764,7 @@ namespace FastColoredTextBoxNS
 
         public void SetAutocompleteItems(ICollection<string> items)
         {
-            List<AutocompleteItem> list = new(items.Count);
+            List<AutocompleteItem> list = new List<AutocompleteItem>(items.Count);
             foreach (var item in items)
                 list.Add(new AutocompleteItem(item));
             SetAutocompleteItems(list);

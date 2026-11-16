@@ -10,7 +10,7 @@ namespace FastColoredTextBoxNS
     /// <remarks>At this time only TextStyle renderer is supported. Other styles is not exported.</remarks>
     public class ExportToHTML
     {
-        public string LineNumbersCss = "<style type=\"text/css\"> .lineNumber{font-family : monospace; font-size : small; font-style : normal; font-weight : normal; color : Teal; background-color : ThreedFace;} </style>";
+        public string LineNumbersCSS = "<style type=\"text/css\"> .lineNumber{font-family : monospace; font-size : small; font-style : normal; font-weight : normal; color : Teal; background-color : ThreedFace;} </style>";
 
         /// <summary>
         /// Use nbsp; instead space
@@ -50,7 +50,7 @@ namespace FastColoredTextBoxNS
         public string GetHtml(FastColoredTextBox tb)
         {
             this.tb = tb;
-            Range sel = new(tb);
+            Range sel = new Range(tb);
             sel.SelectAll();
             return GetHtml(sel);
         }
@@ -58,9 +58,9 @@ namespace FastColoredTextBoxNS
         public string GetHtml(Range r)
         {
             this.tb = r.tb;
-            Dictionary<StyleIndex, object> styles = [];
-            var sb = new StringBuilder();
-            var tempSB = new StringBuilder();
+            Dictionary<StyleIndex, object> styles = new Dictionary<StyleIndex, object>();
+            StringBuilder sb = new StringBuilder();
+            StringBuilder tempSB = new StringBuilder();
             StyleIndex currentStyleId = StyleIndex.None;
             r.Normalize();
             int currentLine = r.Start.iLine;
@@ -137,14 +137,14 @@ namespace FastColoredTextBoxNS
             }
 
             if (IncludeLineNumbers)
-                sb.Insert(0, LineNumbersCss);
+                sb.Insert(0, LineNumbersCSS);
 
             return sb.ToString();
         }
 
         private string GetCss(StyleIndex styleIndex)
         {
-            List<Style> styles = [];
+            List<Style> styles = new List<Style>();
             //find text renderer
             TextStyle textStyle = null;
             int mask = 1;
@@ -165,57 +165,58 @@ namespace FastColoredTextBoxNS
                             textStyle = style as TextStyle;
                         }
                 }
-                mask <<= 1;
+                mask = mask << 1;
             }
             //add TextStyle css
-            string result;
+            string result = "";
             
             if (!hasTextStyle)
             {
                 //draw by default renderer
-                result = tb.DefaultStyle.GetCss();
+                result = tb.DefaultStyle.GetCSS();
             }
             else
             {
-                result = textStyle.GetCss();
+                result = textStyle.GetCSS();
             }
             //add no TextStyle css
             foreach(var style in styles)
-                if (style is not TextStyle)
-                    result += style.GetCss();
+//            if (style != textStyle)
+            if(!(style is TextStyle))
+                result += style.GetCSS();
 
             return result;
         }
 
         public static string GetColorAsString(Color color)
         {
-            if (color == Color.Transparent)
-                return string.Empty;
+            if(color==Color.Transparent)
+                return "";
             return string.Format("#{0:x2}{1:x2}{2:x2}", color.R, color.G, color.B);
         }
 
-        static string GetStyleName(StyleIndex styleIndex)
+        string GetStyleName(StyleIndex styleIndex)
         {
             return styleIndex.ToString().Replace(" ", "").Replace(",", "");
         }
 
-        private void Flush(StringBuilder sb, StringBuilder tempSb, StyleIndex currentStyle)
+        private void Flush(StringBuilder sb, StringBuilder tempSB, StyleIndex currentStyle)
         {
             //find textRenderer
-            if (tempSb.Length == 0)
+            if (tempSB.Length == 0)
                 return;
             if (UseStyleTag)
-                sb.AppendFormat("<font class=fctb{0}>{1}</font>", GetStyleName(currentStyle), tempSb.ToString());
+                sb.AppendFormat("<font class=fctb{0}>{1}</font>", GetStyleName(currentStyle), tempSB.ToString());
             else
             {
                 string css = GetCss(currentStyle);
                 if(css!="")
                     sb.AppendFormat("<font style=\"{0}\">", css);
-                sb.Append(tempSb);
+                sb.Append(tempSB.ToString());
                 if (css != "")
                     sb.Append("</font>");
             }
-            tempSb.Length = 0;
+            tempSB.Length = 0;
         }
     }
 }

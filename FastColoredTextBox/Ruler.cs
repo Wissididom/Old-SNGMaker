@@ -25,7 +25,6 @@ namespace FastColoredTextBoxNS
         FastColoredTextBox target;
 
         [Description("Target FastColoredTextBox")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public FastColoredTextBox Target
         {
             get { return target; }

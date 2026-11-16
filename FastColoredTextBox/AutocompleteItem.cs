@@ -217,7 +217,7 @@ namespace FastColoredTextBoxNS
     public class MethodAutocompleteItem : AutocompleteItem
     {
         string firstPart;
-        readonly string lowercaseText;
+        string lowercaseText;
 
         public MethodAutocompleteItem(string text)
             : base(text)
@@ -230,13 +230,13 @@ namespace FastColoredTextBoxNS
             int i = fragmentText.LastIndexOf('.');
             if (i < 0)
                 return CompareResult.Hidden;
-            string lastPart = fragmentText[(i + 1)..];
-            firstPart = fragmentText[..i];
+            string lastPart = fragmentText.Substring(i + 1);
+            firstPart = fragmentText.Substring(0, i);
 
             if(lastPart=="") return CompareResult.Visible;
             if(Text.StartsWith(lastPart, StringComparison.InvariantCultureIgnoreCase))
                 return CompareResult.VisibleAndSelected;
-            if(lowercaseText.Contains(lastPart, StringComparison.InvariantCultureIgnoreCase))
+            if(lowercaseText.Contains(lastPart.ToLower()))
                 return CompareResult.Visible;
 
             return CompareResult.Hidden;
@@ -252,8 +252,12 @@ namespace FastColoredTextBoxNS
     /// This Item does not check correspondence to current text fragment.
     /// SuggestItem is intended for dynamic menus.
     /// </summary>
-    public class SuggestItem(string text, int imageIndex) : AutocompleteItem(text, imageIndex)
+    public class SuggestItem : AutocompleteItem
     {
+        public SuggestItem(string text, int imageIndex):base(text, imageIndex)
+        {   
+        }
+
         public override CompareResult Compare(string fragmentText)
         {
             return CompareResult.Visible;

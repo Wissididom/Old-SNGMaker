@@ -81,9 +81,9 @@ namespace FastColoredTextBoxNS
         /// Returns CSS for export to HTML
         /// </summary>
         /// <returns></returns>
-        public virtual string GetCss()
+        public virtual string GetCSS()
         {
-            return string.Empty;
+            return "";
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace FastColoredTextBoxNS
             }
         }
 
-        public override string GetCss()
+        public override string GetCSS()
         {
             string result = "";
 
@@ -321,7 +321,7 @@ namespace FastColoredTextBoxNS
             }
         }
 
-        public override string GetCss()
+        public override string GetCSS()
         {
             string result = "";
 

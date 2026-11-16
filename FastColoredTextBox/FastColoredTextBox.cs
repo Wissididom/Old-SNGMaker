@@ -221,7 +221,6 @@ namespace FastColoredTextBoxNS
 
         private char[] autoCompleteBracketsList = { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public char[] AutoCompleteBracketsList
         {
             get { return autoCompleteBracketsList; }
@@ -241,7 +240,6 @@ namespace FastColoredTextBoxNS
         [Browsable(true)] 
         [Description("Colors of some service visual markers.")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ServiceColors ServiceColors { get; set; }
 
         /// <summary>
@@ -321,7 +319,6 @@ namespace FastColoredTextBoxNS
         /// </summary>
         [Browsable(true)]
         [Description("ToolTip component.")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ToolTip ToolTip { get; set; }
 
         /// <summary>
@@ -481,7 +478,6 @@ namespace FastColoredTextBoxNS
         /// Height of char in pixels (includes LineInterval)
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CharHeight
         {
             get { return charHeight; }
@@ -513,7 +509,6 @@ namespace FastColoredTextBoxNS
         /// Width of char in pixels
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CharWidth { get; set; }
 
         /// <summary>
@@ -722,7 +717,6 @@ namespace FastColoredTextBoxNS
         /// </summary>
         [Browsable(true)]
         [Description("Paddings of text area.")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Padding Paddings { get; set; }
 
         /// <summary>
@@ -856,28 +850,24 @@ namespace FastColoredTextBoxNS
         /// Style for rendering Selection area
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public SelectionStyle SelectionStyle { get; set; }
 
         /// <summary>
         /// Style for folded block rendering
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextStyle FoldedBlockStyle { get; set; }
 
         /// <summary>
         /// Style for brackets highlighting
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MarkerStyle BracketsStyle { get; set; }
 
         /// <summary>
         /// Style for alternative brackets highlighting
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MarkerStyle BracketsStyle2 { get; set; }
 
         /// <summary>
@@ -933,7 +923,6 @@ namespace FastColoredTextBoxNS
         /// Is keyboard in replace mode (wide caret) ?
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsReplaceMode
         {
             get
@@ -1181,7 +1170,6 @@ namespace FastColoredTextBoxNS
         /// Current selection range
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Range Selection
         {
             get { return selection; }
@@ -1215,7 +1203,6 @@ namespace FastColoredTextBoxNS
         /// If Null then BackColor is used.
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Brush BackBrush
         {
             get { return backBrush; }
@@ -1361,7 +1348,6 @@ namespace FastColoredTextBoxNS
         /// Gets or sets char and styleId for given place
         /// This property does not fire OnTextChanged event
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Char this[Place place]
         {
             get { return lines[place.iLine][place.iChar]; }
@@ -1559,7 +1545,6 @@ namespace FastColoredTextBoxNS
             Invalidate();
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new Size AutoScrollMinSize
         {
             set
@@ -1788,7 +1773,8 @@ namespace FastColoredTextBoxNS
         /// <param name="hint"></param>
         public virtual void OnHintClick(Hint hint)
         {
-            HintClick?.Invoke(this, new HintClickEventArgs(hint));
+            if (HintClick != null)
+                HintClick(this, new HintClickEventArgs(hint));
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -1799,9 +1785,9 @@ namespace FastColoredTextBoxNS
 
         protected virtual void OnToolTip()
         {
-            if (ToolTip is null)
+            if (ToolTip == null)
                 return;
-            if (ToolTipNeeded is null)
+            if (ToolTipNeeded == null)
                 return;
 
             //get place under mouse
@@ -1819,7 +1805,7 @@ namespace FastColoredTextBoxNS
             var ea = new ToolTipNeededEventArgs(place, hoveredWord);
             ToolTipNeeded(this, ea);
 
-            if (ea.ToolTipText is not null)
+            if (ea.ToolTipText != null)
             {
                 //show tooltip
                 ToolTip.ToolTipTitle = ea.ToolTipTitle;
@@ -1849,7 +1835,7 @@ namespace FastColoredTextBoxNS
         public new void Invalidate()
         {
             if (InvokeRequired)
-                BeginInvoke(new System.Windows.Forms.MethodInvoker(Invalidate));
+                BeginInvoke(new MethodInvoker(Invalidate));
             else
                 base.Invalidate();
         }
@@ -2346,23 +2332,23 @@ namespace FastColoredTextBoxNS
                 }
             }
 
-            if (SelectionChangedDelayed is not null)
+            if (SelectionChangedDelayed != null)
                 SelectionChangedDelayed(this, new EventArgs());
         }
 
         public virtual void OnVisibleRangeChangedDelayed()
         {
-            if (VisibleRangeChangedDelayed is not null)
+            if (VisibleRangeChangedDelayed != null)
                 VisibleRangeChangedDelayed(this, new EventArgs());
         }
 
-        Dictionary<Timer, Timer> timersToReset = [];
+        Dictionary<Timer, Timer> timersToReset = new Dictionary<Timer, Timer>();
 
         private void ResetTimer(Timer timer)
         {
             if(InvokeRequired)
             {
-                BeginInvoke(new System.Windows.Forms.MethodInvoker(() => ResetTimer(timer)));
+                BeginInvoke(new MethodInvoker(()=>ResetTimer(timer)));
                 return;
             }
             timer.Stop();
@@ -3417,14 +3403,14 @@ namespace FastColoredTextBoxNS
                 PerformLayout();
 
             if (IsHandleCreated)
-                BeginInvoke((System.Windows.Forms.MethodInvoker)OnScrollbarsUpdated);
+                BeginInvoke((MethodInvoker)OnScrollbarsUpdated);
         }
 
         private void OnMagicUpdateScrollBars()
         {
             if (this.InvokeRequired)
             {
-                Invoke(new System.Windows.Forms.MethodInvoker(OnMagicUpdateScrollBars));
+                Invoke(new MethodInvoker(OnMagicUpdateScrollBars));
             }
             else
             {
@@ -5728,8 +5714,7 @@ namespace FastColoredTextBoxNS
         /// Zooming (in percentages)
         /// </summary>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public int Zoom
+        public int Zoom 
         {
             get { return zoom; }
             set {
