@@ -568,13 +568,13 @@ namespace FastColoredTextBoxNS
 
         protected static Color ParseColor(string s)
         {
-            if (s.StartsWith('#'))
+            if (s.StartsWith("#"))
             {
                 if (s.Length <= 7)
                     return Color.FromArgb(255,
-                                          Color.FromArgb(int.Parse(s.Substring(1), NumberStyles.AllowHexSpecifier)));
+                                          Color.FromArgb(Int32.Parse(s.Substring(1), NumberStyles.AllowHexSpecifier)));
                 else
-                    return Color.FromArgb(int.Parse(s.Substring(1), NumberStyles.AllowHexSpecifier));
+                    return Color.FromArgb(Int32.Parse(s.Substring(1), NumberStyles.AllowHexSpecifier));
             }
             else
                 return Color.FromName(s);

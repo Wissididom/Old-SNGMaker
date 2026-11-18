@@ -1,4 +1,8 @@
-﻿using System;
+﻿//          Copyright Tao Klerks, 2010-2012, tao@klerks.biz         
+//          Licensed under the modified BSD license.
+
+
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,23 +11,26 @@ namespace FastColoredTextBoxNS
 {
     public static class EncodingDetector
     {
-        const long defaultHeuristicSampleSize = 0x10000; //completely arbitrary - inappropriate for high numbers of files / high speed requirements
+        const long _defaultHeuristicSampleSize = 0x10000; //completely arbitrary - inappropriate for high numbers of files / high speed requirements
 
         public static Encoding DetectTextFileEncoding(string InputFilename)
         {
-            using FileStream textfileStream = File.OpenRead(InputFilename);
-            return DetectTextFileEncoding(textfileStream, defaultHeuristicSampleSize);
+            using (FileStream textfileStream = File.OpenRead(InputFilename))
+            {
+                return DetectTextFileEncoding(textfileStream, _defaultHeuristicSampleSize);
+            }
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        public static Encoding DetectTextFileEncoding(FileStream InputFileStream, long heuristicSampleSize)
-#pragma warning restore IDE0060 // Remove unused parameter
+        public static Encoding DetectTextFileEncoding(FileStream InputFileStream, long HeuristicSampleSize)
         {
-            return DetectTextFileEncoding(InputFileStream, defaultHeuristicSampleSize, out bool _);
+            bool uselessBool = false;
+            return DetectTextFileEncoding(InputFileStream, _defaultHeuristicSampleSize, out uselessBool);
         }
 
-        public static Encoding DetectTextFileEncoding(FileStream InputFileStream, long heuristicSampleSize, out bool hasBom)
+        public static Encoding DetectTextFileEncoding(FileStream InputFileStream, long HeuristicSampleSize, out bool HasBOM)
         {
+            Encoding encodingFound = null;
+
             long originalPos = InputFileStream.Position;
 
             InputFileStream.Position = 0;
@@ -31,30 +38,30 @@ namespace FastColoredTextBoxNS
 
             //First read only what we need for BOM detection
             byte[] bomBytes = new byte[InputFileStream.Length > 4 ? 4 : InputFileStream.Length];
-            InputFileStream.ReadExactly(bomBytes);
+            InputFileStream.Read(bomBytes, 0, bomBytes.Length);
 
-            Encoding encodingFound = DetectBOMBytes(bomBytes);
+            encodingFound = DetectBOMBytes(bomBytes);
 
-            if (encodingFound is not null)
+            if (encodingFound != null)
             {
                 InputFileStream.Position = originalPos;
-                hasBom = true;
+                HasBOM = true;
                 return encodingFound;
             }
 
 
             //BOM Detection failed, going for heuristics now.
             //  create sample byte array and populate it
-            byte[] sampleBytes = new byte[heuristicSampleSize > InputFileStream.Length ? InputFileStream.Length : heuristicSampleSize];
+            byte[] sampleBytes = new byte[HeuristicSampleSize > InputFileStream.Length ? InputFileStream.Length : HeuristicSampleSize];
             Array.Copy(bomBytes, sampleBytes, bomBytes.Length);
             if (InputFileStream.Length > bomBytes.Length)
-                InputFileStream.ReadExactly(sampleBytes, bomBytes.Length, sampleBytes.Length - bomBytes.Length);
+                InputFileStream.Read(sampleBytes, bomBytes.Length, sampleBytes.Length - bomBytes.Length);
             InputFileStream.Position = originalPos;
 
             //test byte array content
             encodingFound = DetectUnicodeInByteSampleByHeuristics(sampleBytes);
 
-            hasBom = false;
+            HasBOM = false;
             return encodingFound;
         }
 
@@ -84,9 +91,7 @@ namespace FastColoredTextBoxNS
                 return Encoding.UTF8;
 
             if (BOMBytes[0] == 0x2b && BOMBytes[1] == 0x2f && BOMBytes[2] == 0x76)
-#pragma warning disable SYSLIB0001 // Type or member is obsolete
                 return Encoding.UTF7;
-#pragma warning restore SYSLIB0001 // Type or member is obsolete
 
             if (BOMBytes.Length < 4)
                 return null;
@@ -178,8 +183,8 @@ namespace FastColoredTextBoxNS
             //  using regexp, in his w3c.org unicode FAQ entry: 
             //  http://www.w3.org/International/questions/qa-forms-utf-8
             //  adapted here for C#.
-            var potentiallyMangledString = Encoding.ASCII.GetString(SampleBytes);
-            var utf8Validator = new Regex(@"\A("
+            string potentiallyMangledString = Encoding.ASCII.GetString(SampleBytes);
+            Regex UTF8Validator = new Regex(@"\A("
                 + @"[\x09\x0A\x0D\x20-\x7E]"
                 + @"|[\xC2-\xDF][\x80-\xBF]"
                 + @"|\xE0[\xA0-\xBF][\x80-\xBF]"
@@ -189,7 +194,7 @@ namespace FastColoredTextBoxNS
                 + @"|[\xF1-\xF3][\x80-\xBF]{3}"
                 + @"|\xF4[\x80-\x8F][\x80-\xBF]{2}"
                 + @")*\z");
-            if (utf8Validator.IsMatch(potentiallyMangledString))
+            if (UTF8Validator.IsMatch(potentiallyMangledString))
             {
                 //Unfortunately, just the fact that it CAN be UTF-8 doesn't tell you much about probabilities.
                 //If all the characters are in the 0-127 range, no harm done, most western charsets are same as UTF-8 in these ranges.

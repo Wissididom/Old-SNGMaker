@@ -3,18 +3,23 @@ using System;
 
 namespace FastColoredTextBoxNS
 {
-    public class CommandManager(TextSource ts)
+    public class CommandManager
     {
-#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static int MaxHistoryLength = 200;
-#pragma warning restore CA2211 // Non-constant fields should not be visible
 
-        readonly LimitedStack<UndoableCommand> history = new(MaxHistoryLength);
-        readonly Stack<UndoableCommand> redoStack = new();
-        public TextSource TextSource { get; private set; } = ts;
-        public bool UndoRedoStackIsEnabled { get; set; } = true;
+        LimitedStack<UndoableCommand> history;
+        Stack<UndoableCommand> redoStack = new Stack<UndoableCommand>();
+        public TextSource TextSource{ get; private set; }
+        public bool UndoRedoStackIsEnabled { get; set; }
 
         public event EventHandler RedoCompleted = delegate { };
+
+        public CommandManager(TextSource ts)
+        {
+            history = new LimitedStack<UndoableCommand>(MaxHistoryLength);
+            TextSource = ts;
+            UndoRedoStackIsEnabled = true;
+        }
 
         public virtual void ExecuteCommand(Command cmd)
         {
@@ -23,16 +28,16 @@ namespace FastColoredTextBoxNS
 
             //multirange ?
             if (cmd.ts.CurrentTB.Selection.ColumnSelectionMode)
-            if (cmd is UndoableCommand undoableCommand1)
+            if (cmd is UndoableCommand)
                 //make wrapper
-                cmd = new MultiRangeCommand(undoableCommand1);
+                cmd = new MultiRangeCommand((UndoableCommand)cmd);
 
 
-            if (cmd is UndoableCommand undoableCommand2)
+            if (cmd is UndoableCommand)
             {
                 //if range is ColumnRange, then create wrapper
-                undoableCommand2.autoUndo = autoUndoCommands > 0;
-                history.Push(undoableCommand2);
+                (cmd as UndoableCommand).autoUndo = autoUndoCommands > 0;
+                history.Push(cmd as UndoableCommand);
             }
 
             try
@@ -171,10 +176,16 @@ namespace FastColoredTextBoxNS
         public abstract void Execute();
     }
 
-    internal class RangeInfo(Range r)
+    internal class RangeInfo
     {
-        public Place Start { get; set; } = r.Start;
-        public Place End { get; set; } = r.End;
+        public Place Start { get; set; }
+        public Place End { get; set; }
+
+        public RangeInfo(Range r)
+        {
+            Start = r.Start;
+            End = r.End;
+        }
 
         internal int FromX
         {

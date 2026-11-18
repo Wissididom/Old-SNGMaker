@@ -49,7 +49,7 @@ namespace FastColoredTextBoxNS
     public class Bookmarks : BaseBookmarks
     {
         protected FastColoredTextBox tb;
-        protected List<Bookmark> items = [];
+        protected List<Bookmark> items = new List<Bookmark>();
         protected int counter;
 
         public Bookmarks(FastColoredTextBox tb)
@@ -111,7 +111,6 @@ namespace FastColoredTextBoxNS
         {
             tb.LineInserted -= tb_LineInserted;
             tb.LineRemoved -= tb_LineRemoved;
-            GC.SuppressFinalize(this);
         }
 
         public override IEnumerator<Bookmark> GetEnumerator()
@@ -211,21 +210,21 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Bookmark of FastColoredTextbox
     /// </summary>
-    public class Bookmark(FastColoredTextBox tb, string name, int lineIndex)
+    public class Bookmark
     {
-        public FastColoredTextBox TB { get; private set; } = tb;
+        public FastColoredTextBox TB { get; private set; }
         /// <summary>
         /// Name of bookmark
         /// </summary>
-        public string Name { get; set; } = name;
+        public string Name { get; set; }
         /// <summary>
         /// Line index
         /// </summary>
-        public int LineIndex { get; set; } = lineIndex;
+        public int LineIndex {get; set; }
         /// <summary>
         /// Color of bookmark sign
         /// </summary>
-        public Color Color { get; set; } = tb.BookmarkColor;
+        public Color Color { get; set; }
 
         /// <summary>
         /// Scroll textbox to the bookmark
@@ -237,13 +236,21 @@ namespace FastColoredTextBoxNS
             TB.Invalidate();
         }
 
+        public Bookmark(FastColoredTextBox tb, string name, int lineIndex)
+        {
+            this.TB = tb;
+            this.Name = name;
+            this.LineIndex = lineIndex;
+            Color = tb.BookmarkColor;
+        }
+
         public virtual void Paint(Graphics gr, Rectangle lineRect)
         {
             var size = TB.CharHeight - 1;
             using (var brush = new LinearGradientBrush(new Rectangle(0, lineRect.Top, size, size), Color.White, Color, 45))
                 gr.FillEllipse(brush, 0, lineRect.Top, size, size);
-            using var pen = new Pen(Color);
-            gr.DrawEllipse(pen, 0, lineRect.Top, size, size);
+            using (var pen = new Pen(Color))
+                gr.DrawEllipse(pen, 0, lineRect.Top, size, size);
         }
     }
 }

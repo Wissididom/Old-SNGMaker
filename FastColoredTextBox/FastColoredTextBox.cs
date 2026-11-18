@@ -36,6 +36,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using Microsoft.Win32;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 using Timer = System.Windows.Forms.Timer;
 
 namespace FastColoredTextBoxNS
@@ -1788,7 +1789,8 @@ namespace FastColoredTextBoxNS
         /// <param name="hint"></param>
         public virtual void OnHintClick(Hint hint)
         {
-            HintClick?.Invoke(this, new HintClickEventArgs(hint));
+            if (HintClick != null)
+                HintClick(this, new HintClickEventArgs(hint));
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -1799,9 +1801,9 @@ namespace FastColoredTextBoxNS
 
         protected virtual void OnToolTip()
         {
-            if (ToolTip is null)
+            if (ToolTip == null)
                 return;
-            if (ToolTipNeeded is null)
+            if (ToolTipNeeded == null)
                 return;
 
             //get place under mouse
@@ -1819,7 +1821,7 @@ namespace FastColoredTextBoxNS
             var ea = new ToolTipNeededEventArgs(place, hoveredWord);
             ToolTipNeeded(this, ea);
 
-            if (ea.ToolTipText is not null)
+            if (ea.ToolTipText != null)
             {
                 //show tooltip
                 ToolTip.ToolTipTitle = ea.ToolTipTitle;
@@ -1849,7 +1851,7 @@ namespace FastColoredTextBoxNS
         public new void Invalidate()
         {
             if (InvokeRequired)
-                BeginInvoke(new System.Windows.Forms.MethodInvoker(Invalidate));
+                BeginInvoke(new MethodInvoker(Invalidate));
             else
                 base.Invalidate();
         }
@@ -2346,23 +2348,23 @@ namespace FastColoredTextBoxNS
                 }
             }
 
-            if (SelectionChangedDelayed is not null)
+            if (SelectionChangedDelayed != null)
                 SelectionChangedDelayed(this, new EventArgs());
         }
 
         public virtual void OnVisibleRangeChangedDelayed()
         {
-            if (VisibleRangeChangedDelayed is not null)
+            if (VisibleRangeChangedDelayed != null)
                 VisibleRangeChangedDelayed(this, new EventArgs());
         }
 
-        Dictionary<Timer, Timer> timersToReset = [];
+        Dictionary<Timer, Timer> timersToReset = new Dictionary<Timer, Timer>();
 
         private void ResetTimer(Timer timer)
         {
             if(InvokeRequired)
             {
-                BeginInvoke(new System.Windows.Forms.MethodInvoker(() => ResetTimer(timer)));
+                BeginInvoke(new MethodInvoker(()=>ResetTimer(timer)));
                 return;
             }
             timer.Stop();
@@ -3417,14 +3419,14 @@ namespace FastColoredTextBoxNS
                 PerformLayout();
 
             if (IsHandleCreated)
-                BeginInvoke((System.Windows.Forms.MethodInvoker)OnScrollbarsUpdated);
+                BeginInvoke((MethodInvoker)OnScrollbarsUpdated);
         }
 
         private void OnMagicUpdateScrollBars()
         {
             if (this.InvokeRequired)
             {
-                Invoke(new System.Windows.Forms.MethodInvoker(OnMagicUpdateScrollBars));
+                Invoke(new MethodInvoker(OnMagicUpdateScrollBars));
             }
             else
             {

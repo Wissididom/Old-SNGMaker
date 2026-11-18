@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define debug
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -11,10 +13,10 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public class FileTextSource : TextSource, IDisposable
     {
-        List<int> sourceFileLinePositions = [];
+        List<int> sourceFileLinePositions = new List<int>();
         FileStream fs;
         Encoding fileEncoding;
-        readonly System.Windows.Forms.Timer timer = new();
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         /// <summary>
         /// Occurs when need to display line in the textbox
@@ -26,7 +28,8 @@ namespace FastColoredTextBoxNS
         /// </summary>
         public event EventHandler<LinePushedEventArgs> LinePushed;
 
-        public FileTextSource(FastColoredTextBox currentTb) : base(currentTb)
+        public FileTextSource(FastColoredTextBox currentTB)
+            : base(currentTB)
         {
             timer.Interval = 10000;
             timer.Tick += new EventHandler(timer_Tick);
@@ -70,7 +73,8 @@ namespace FastColoredTextBoxNS
         {
             Clear();
 
-            fs?.Dispose();
+            if (fs != null)
+                fs.Dispose();
 
             SaveEOL = Environment.NewLine;
 
@@ -114,7 +118,7 @@ namespace FastColoredTextBoxNS
 
             int prev = 0;
             int prevPos = 0;
-            var br = new BinaryReader(fs, enc);
+            BinaryReader br = new BinaryReader(fs, enc);
             while (fs.Position < length)
             {
                 prevPos = (int)fs.Position;
@@ -173,7 +177,7 @@ namespace FastColoredTextBoxNS
                 OnRecalcWordWrap(new TextChangedEventArgs(0, linesCount - 1));
         }
 
-        private static int DefineShift(Encoding enc)
+        private int DefineShift(Encoding enc)
         {
             if (enc.IsSingleByte)
                 return 0;
@@ -260,9 +264,9 @@ namespace FastColoredTextBoxNS
             var dir = Path.GetDirectoryName(fileName);
             var tempFileName = Path.Combine(dir, Path.GetFileNameWithoutExtension(fileName) + ".tmp");
 
-            var sr = new StreamReader(fs, fileEncoding);
-            using (var tempFs = new FileStream(tempFileName, FileMode.Create))
-            using (var sw = new StreamWriter(tempFs, enc))
+            StreamReader sr = new StreamReader(fs, fileEncoding);
+            using (FileStream tempFs = new FileStream(tempFileName, FileMode.Create))
+            using (StreamWriter sw = new StreamWriter(tempFs, enc))
             {
                 sw.Flush();
 
@@ -333,14 +337,15 @@ namespace FastColoredTextBoxNS
         public override void ClearIsChanged()
         {
             foreach (var line in lines)
-                line?.IsChanged = false;
+                if(line!=null)
+                    line.IsChanged = false;
         }
 
         public override Line this[int i]
         {
             get 
             {
-                if (base.lines[i] is not null)
+                if (base.lines[i] != null)
                     return lines[i];
                 else
                     LoadLineFromSourceFile(i);
@@ -357,13 +362,14 @@ namespace FastColoredTextBoxNS
         {
             var line = CreateLine();
             fs.Seek(sourceFileLinePositions[i], SeekOrigin.Begin);
-            var sr = new StreamReader(fs, fileEncoding);
+            StreamReader sr = new StreamReader(fs, fileEncoding);
 
             var s = sr.ReadLine();
-            s ??= string.Empty;
+            if (s == null)
+                s = "";
 
             //call event handler
-            if (LineNeeded is not null)
+            if(LineNeeded!=null)
             {
                 var args = new LineNeededEventArgs(s, i);
                 LineNeeded(this, args);
@@ -399,7 +405,7 @@ namespace FastColoredTextBoxNS
 
         public override int GetLineLength(int i)
         {
-            if (base.lines[i] is null)
+            if (base.lines[i] == null)
                 return 0;
             else
                 return base.lines[i].Count;
@@ -407,7 +413,7 @@ namespace FastColoredTextBoxNS
 
         public override bool LineHasFoldingStartMarker(int iLine)
         {
-            if (lines[iLine] is null)
+            if (lines[iLine] == null)
                 return false;
             else
                 return !string.IsNullOrEmpty(lines[iLine].FoldingStartMarker);
@@ -415,7 +421,7 @@ namespace FastColoredTextBoxNS
 
         public override bool LineHasFoldingEndMarker(int iLine)
         {
-            if (lines[iLine] is null)
+            if (lines[iLine] == null)
                 return false;
             else
                 return !string.IsNullOrEmpty(lines[iLine].FoldingEndMarker);
@@ -423,41 +429,57 @@ namespace FastColoredTextBoxNS
 
         public override void Dispose()
         {
-            fs?.Dispose();
+            if (fs != null)
+                fs.Dispose();
+
             timer.Dispose();
-            GC.SuppressFinalize(this);
         }
 
         internal void UnloadLine(int iLine)
         {
-            if (lines[iLine] is not null && !lines[iLine].IsChanged)
+            if (lines[iLine] != null && !lines[iLine].IsChanged)
                 lines[iLine] = null;
         }
     }
 
-    public class LineNeededEventArgs(string sourceLineText, int displayedLineIndex) : EventArgs
+    public class LineNeededEventArgs : EventArgs
     {
-        public string SourceLineText { get; private set; } = sourceLineText;
-        public int DisplayedLineIndex { get; private set; } = displayedLineIndex;
+        public string SourceLineText { get; private set; }
+        public int DisplayedLineIndex { get; private set; }
         /// <summary>
         /// This text will be displayed in textbox
         /// </summary>
-        public string DisplayedLineText { get; set; } = sourceLineText;
+        public string DisplayedLineText { get; set; }
+
+        public LineNeededEventArgs(string sourceLineText, int displayedLineIndex)
+        {
+            this.SourceLineText = sourceLineText;
+            this.DisplayedLineIndex = displayedLineIndex;
+            this.DisplayedLineText = sourceLineText;
+        }
     }
 
-    public class LinePushedEventArgs(string sourceLineText, int displayedLineIndex, string displayedLineText) : EventArgs
+    public class LinePushedEventArgs : EventArgs
     {
-        public string SourceLineText { get; private set; } = sourceLineText;
-        public int DisplayedLineIndex { get; private set; } = displayedLineIndex;
+        public string SourceLineText { get; private set; }
+        public int DisplayedLineIndex { get; private set; }
         /// <summary>
         /// This property contains only changed text.
         /// If text of line is not changed, this property contains null.
         /// </summary>
-        public string DisplayedLineText { get; private set; } = displayedLineText;
+        public string DisplayedLineText { get; private set; }
         /// <summary>
         /// This text will be saved in the file
         /// </summary>
-        public string SavedText { get; set; } = displayedLineText;
+        public string SavedText { get; set; }
+
+        public LinePushedEventArgs(string sourceLineText, int displayedLineIndex, string displayedLineText)
+        {
+            this.SourceLineText = sourceLineText;
+            this.DisplayedLineIndex = displayedLineIndex;
+            this.DisplayedLineText = displayedLineText;
+            this.SavedText = displayedLineText;
+        }
     }
 
     class CharReader : TextReader
