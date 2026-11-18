@@ -23,6 +23,7 @@ namespace FastColoredTextBoxNS
         private bool scrollbarVisible = true;
 
         [Description("Target FastColoredTextBox")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public FastColoredTextBox Target
         {
             get { return target; }
@@ -45,7 +46,7 @@ namespace FastColoredTextBoxNS
         /// </summary>
         [Description("Scale")]
         [DefaultValue(0.3f)]
-        public float Scale
+        public new float Scale
         {
             get { return scale; }
             set
